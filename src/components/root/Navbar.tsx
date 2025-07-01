@@ -15,6 +15,8 @@ function Navbar() {
   useEffect(() => {
     setImage(isDark ? dark : light);
   }, [isDark]);
+  console.log(user)
+
 
   return (
     <div className="w-full h-[8vh] sm:h-[9vh] lg:h-[10vh] min-h-[50px] sm:min-h-[60px] bg-light-bg-primary border-b border-gray-300 dark:border-gray-800 drop-shadow-lg px-3 sm:px-6 lg:px-10 flex justify-between items-center text-light-text-primary">

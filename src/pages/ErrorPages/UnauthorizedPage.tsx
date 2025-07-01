@@ -8,7 +8,6 @@ export const UnauthorizedPage: React.FC = () => (
         title="Access Denied"
         message="You don't have permission to access this page. Please log in with appropriate credentials."
         variant="warning"
-        customRedirectPath="/auth"
         icon="🔒"
     />
 );

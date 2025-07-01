@@ -8,12 +8,14 @@ import {
 // import onboardingReducer from "./../slices/onboardingSlice";
 import rootReducer from "./../redux/slices/rootSlice";
 import feedReducer from "./../redux/slices/feedSlice";
+import userReducer from "./../redux/slices/userSlice";
 // import workspaceReducer from "./../slices/workspaceSlice";
 
 export const store = configureStore({
   reducer: {
     root: rootReducer,
     feed: feedReducer,
+    user: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

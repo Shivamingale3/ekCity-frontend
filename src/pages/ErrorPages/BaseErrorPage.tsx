@@ -25,12 +25,12 @@ export const BaseErrorPage: React.FC<BaseErrorPageProps> = ({
     variant = 'default'
 }) => {
     const [countdown, setCountdown] = useState(customRedirectDelay);
-    const { status } = useAuthStore();
+    const { user } = useAuthStore();
 
     // Determine redirect path based on auth status
     const getRedirectPath = () => {
         if (customRedirectPath) return customRedirectPath;
-        return status === AuthStatus.AUTHENTICATED ? '/feed' : '/auth';
+        return user ? '/feed' : '/auth';
     };
 
     const redirectPath = getRedirectPath();

@@ -3,9 +3,18 @@ import AuthForms from "@/components/auth/AuthForms";
 import Features from "../components/root/landing/FeaturesList";
 import Footer from "../components/root/landing/Footer";
 import Hero from "../components/root/landing/Hero";
+import { useAuthStore } from "@/stores/authStore";
+import { useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 // Remove the Navbar import since RootLayout already provides it
 
 function AuthLayout() {
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
+  useEffect(() => {
+    if (user) navigate({ to: "/feed" })
+  }, [user]);
+
   return (
     <div className="min-h-screen w-screen scrollbar-hide flex flex-col justify-between overflow-hidden items-start bg-light-bg-primary dark:bg-dark-bg-primary">
       {/* Remove the navbar section since RootLayout handles it */}
