@@ -1,10 +1,8 @@
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
-import { useState } from "react"
-import { type PostMedia as PostMediaType, MediaType } from "../../../types/postTypes"
+import React, { useState } from "react"
 import { createPortal } from "react-dom"
-import React from "react"
+import { type PostMedia as PostMediaType, MediaType } from "../../../types/postTypes"
 
 interface PostMediaProps {
   media: PostMediaType[]
