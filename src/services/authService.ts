@@ -14,7 +14,7 @@ import type {
 import { apiService } from "./apiService";
 import { auth } from "@/config/firebase";
 
-class AuthService {
+export class AuthService {
   private auth = auth;
   private googleProvider = new GoogleAuthProvider();
 
@@ -35,6 +35,7 @@ class AuthService {
       );
       // Reset flags on successful login
       apiService.resetFlags();
+      this.setTokens(response.data.data.tokens);
       return response.data;
     } catch (error: any) {
       throw new Error(error.message || "Login failed");
@@ -67,6 +68,7 @@ class AuthService {
 
       // Reset flags on successful registration
       apiService.resetFlags();
+      this.setTokens(response.data.data.tokens);
       return response.data;
     } catch (error: any) {
       throw new Error(error.message || "Registration failed");
@@ -104,6 +106,7 @@ class AuthService {
         "/auth/sso-login",
         payload
       );
+      this.setTokens(response.data.data.tokens);
       return response.data;
     } catch (error: any) {
       throw new Error(error.message || "SSO login failed");
@@ -141,6 +144,21 @@ class AuthService {
   // async refreshToken(): Promise<AuthResponse> {
   //   This is now handled internally by apiService interceptor
   // }
+
+  public setTokens(tokens: { accessToken: string; refreshToken: string }) {
+    localStorage.setItem("accessToken", tokens.accessToken);
+    localStorage.setItem("refreshToken", tokens.refreshToken);
+  }
+
+  public getTokens(): {
+    accessToken: string | null;
+    refreshToken: string | null;
+  } {
+    return {
+      accessToken: localStorage.getItem("accessToken"),
+      refreshToken: localStorage.getItem("refreshToken"),
+    };
+  }
 }
 
 export const authService = new AuthService();

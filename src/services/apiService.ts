@@ -4,6 +4,7 @@ import axios, {
   type AxiosRequestConfig,
   type AxiosResponse,
 } from "axios";
+// import { AuthService, authService } from "./authService";
 
 class ApiService {
   private api: AxiosInstance;
@@ -13,9 +14,9 @@ class ApiService {
   constructor() {
     this.api = axios.create({
       baseURL: import.meta.env.VITE_API_BASE_URL,
-      withCredentials: true,
       headers: {
         "Content-Type": "application/json",
+        // Authorization header will be set dynamically
       },
     });
 
@@ -23,6 +24,23 @@ class ApiService {
   }
 
   private setupInterceptors() {
+    // Request interceptor to set Authorization header from localStorage
+    this.api.interceptors.request.use(
+      (config) => {
+        const accessToken = localStorage.getItem("accessToken");
+        if (accessToken) {
+          config.headers = config.headers || {};
+          config.headers["Authorization"] = `Bearer ${accessToken}`;
+        } else {
+          if (config.headers && config.headers["Authorization"]) {
+            delete config.headers["Authorization"];
+          }
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+
     this.api.interceptors.response.use(
       (response: AxiosResponse) => response,
       async (error) => {
@@ -76,7 +94,11 @@ class ApiService {
 
   private async refreshTokenRequest(): Promise<void> {
     try {
-      await this.api.post("/auth/refresh-token", {});
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!refreshToken) {
+        throw new Error("No refresh token found");
+      }
+      await this.api.post("/auth/refresh-token", { refreshToken });
     } catch (error) {
       throw new Error("Token refresh failed");
     }
