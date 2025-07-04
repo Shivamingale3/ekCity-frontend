@@ -8,9 +8,10 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/authStore";
 import type { Post } from "@/types/postTypes";
-import { Edit, LogOut } from "lucide-react";
+import { Edit, LogOut, ArrowLeft } from "lucide-react";
 import React, { useEffect, useState } from 'react';
 import { ThemeToggleDropdown } from "../root/ThemeToggle";
+import { useNavigate } from "@tanstack/react-router";
 
 function ProfileHeader() {
     const { user, logout } = useAuthStore();
@@ -25,7 +26,8 @@ function ProfileHeader() {
         profilePicture: null as File | null,
     })
 
-    const { toast } = useToast()
+    const { toast } = useToast();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (user) {
@@ -98,90 +100,100 @@ function ProfileHeader() {
         )
     }
     return (
-        <Card className="w-full h-full">
-            <CardHeader className="p-5 m-0 w-full h-full  flex justify-center items-center">
-                <div className="flex flex-col sm:flex-col md:flex-row sm:w-full md:w-full items-center md:justify-between sm:justify-center gap-2">
-                    <div className="flex gap-5 ">
-                        <Avatar className="h-20 w-20 border-2 bg-black dark:bg-white">
-                            <AvatarImage src={user?.profilePicture || ""} />
-                            <AvatarFallback className="text-xl">{user?.firstName?.charAt(0)?.toUpperCase() ?? ""}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col justify-start items-start gap-2">
-                            <div className="flex flex-col justify-start items-start">
-                                <h1 className="text-lg font-bold">{user?.fullName}</h1>
-                                <p className="text-sm text-muted-foreground">{user?.email}</p>
+        <div className="w-full">
+            <button
+                className="mb-4 flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors bg-white/80 dark:bg-black/60 rounded-full px-3 py-1 shadow border"
+                onClick={() => navigate({ to: "/feed" })}
+            >
+                <ArrowLeft className="h-5 w-5" />
+                <span className="text-sm font-medium">Back</span>
+            </button>
+            <Card className="w-full h-full">
+                <CardHeader className="p-5 m-0 w-full h-full  flex justify-center items-center">
+                    <div className="flex flex-col sm:flex-col md:flex-row sm:w-full md:w-full items-center md:justify-between sm:justify-center gap-2">
+                        <div className="flex gap-5 ">
+                            <Avatar className="h-20 w-20 border-2 bg-black dark:bg-white">
+                                <AvatarImage src={user?.profilePicture || ""} />
+                                <AvatarFallback className="text-xl">{user?.firstName?.charAt(0)?.toUpperCase() ?? ""}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col justify-start items-start gap-2">
+                                <div className="flex flex-col justify-start items-start">
+                                    <h1 className="text-lg font-bold">{user?.fullName}</h1>
+                                    <p className="text-sm text-muted-foreground">{user?.email}</p>
+                                </div>
+                                <Badge variant="outline">{user?.role.replace("_", " ")}</Badge>
                             </div>
-                            <Badge variant="outline">{user?.role.replace("_", " ")}</Badge>
                         </div>
-                    </div>
 
-                    <div className="flex gap-2 flex-col">
-                        <div className="flex gap-2">
-                            <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-                                <DialogTrigger asChild>
-                                    <Button variant="outline" size="sm">
-                                        <Edit className="h-4 w-4 mr-2" />
-                                        Edit Profile
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>Edit Profile</DialogTitle>
-                                    </DialogHeader>
-                                    <form onSubmit={handleUpdateProfile} className="space-y-4">
-                                        <div className="space-y-2">
-                                            <Label htmlFor="edit-name">Name</Label>
-                                            <Input
-                                                id="edit-name"
-                                                value={editData.name}
-                                                onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="edit-email">Email</Label>
-                                            <Input
-                                                id="edit-email"
-                                                type="email"
-                                                value={editData.email}
-                                                onChange={(e) => setEditData({ ...editData, email: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="edit-mobile">Mobile</Label>
-                                            <Input
-                                                id="edit-mobile"
-                                                value={editData.mobile}
-                                                onChange={(e) => setEditData({ ...editData, mobile: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label htmlFor="edit-picture">Profile Picture</Label>
-                                            <Input
-                                                id="edit-picture"
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={(e) => setEditData({ ...editData, profilePicture: e.target.files?.[0] || null })}
-                                            />
-                                        </div>
-                                        <Button type="submit" className="w-full">
-                                            Update Profile
+                        <div className="flex gap-2 flex-col">
+                            <div className="flex gap-2">
+                                <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+                                    <DialogTrigger asChild>
+                                        <Button variant="outline" size="sm">
+                                            <Edit className="h-4 w-4 mr-2" />
+                                            Edit Profile
                                         </Button>
-                                    </form>
-                                </DialogContent>
-                            </Dialog>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Edit Profile</DialogTitle>
+                                        </DialogHeader>
+                                        <form onSubmit={handleUpdateProfile} className="space-y-4">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="edit-name">Name</Label>
+                                                <Input
+                                                    id="edit-name"
+                                                    value={editData.name}
+                                                    onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="edit-email">Email</Label>
+                                                <Input
+                                                    id="edit-email"
+                                                    type="email"
+                                                    value={editData.email}
+                                                    onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="edit-mobile">Mobile</Label>
+                                                <Input
+                                                    id="edit-mobile"
+                                                    value={editData.mobile}
+                                                    onChange={(e) => setEditData({ ...editData, mobile: e.target.value })}
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="edit-picture">Profile Picture</Label>
+                                                <Input
+                                                    id="edit-picture"
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={(e) => setEditData({ ...editData, profilePicture: e.target.files?.[0] || null })}
+                                                />
+                                            </div>
+                                            <Button type="submit" className="w-full">
+                                                Update Profile
+                                            </Button>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
 
-                            <Button variant="outline" size="sm" onClick={logout}>
-                                <LogOut className="h-4 w-4 mr-2" />
-                                Logout
-                            </Button>
-                        </div>
-                        <div>
-                            <ThemeToggleDropdown />
+                                <Button variant="outline" size="sm" onClick={logout}>
+                                    <LogOut className="h-4 w-4 mr-2" />
+                                    Logout
+                                </Button>
+                            </div>
+                            <div>
+                                <ThemeToggleDropdown />
+                            </div>
                         </div>
                     </div>
-                </div>
-            </CardHeader>
-        </Card>)
+                </CardHeader>
+            </Card>
+        </div>
+    )
 }
 
 export default ProfileHeader

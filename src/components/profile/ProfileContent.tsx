@@ -1,5 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserPosts from "./UserPosts";
+import UserMedia from "./UserMedia";
 
 function ProfileContent() {
     return (
@@ -36,13 +37,7 @@ function ProfileContent() {
                         value="media"
                         className="w-full h-full m-0 focus-visible:outline-none"
                     >
-                        <div className="w-full h-full flex items-center justify-center">
-                            <div className="text-center">
-                                <div className="text-gray-400 text-2xl mb-2">🎬</div>
-                                <h3 className="text-lg font-medium text-gray-900 mb-1">Media Gallery</h3>
-                                <p className="text-sm text-gray-500">Your photos and videos will appear here.</p>
-                            </div>
-                        </div>
+                        <UserMedia />
                     </TabsContent>
                 </div>
             </Tabs>

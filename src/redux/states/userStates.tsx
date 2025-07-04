@@ -4,5 +4,8 @@ export const userInitialStates: UserInitialStates = {
     error: null,
     userPostsLoading: false,
     userPosts: [],
-    userPostPagination: null
+    userPostPagination: null,
+    userMedia: null,
+    userMediaLoading: false,
+    userMediaError: null
 }

@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
 import { useState } from "react"
 import { type PostMedia as PostMediaType, MediaType } from "../../../types/postTypes"
+import { createPortal } from "react-dom"
+import React from "react"
 
 interface PostMediaProps {
   media: PostMediaType[]
@@ -50,56 +52,132 @@ export const PostMedia = ({ media }: PostMediaProps) => {
     )
   }
 
+  // --- In-Post Media Grid Layout ---
+  const renderMediaGrid = () => {
+    const count = validMedia.length;
+    if (count === 1) {
+      return (
+        <div className="w-full aspect-video rounded-xl overflow-hidden">
+          {renderMediaItem(validMedia[0], 0)}
+        </div>
+      );
+    }
+    if (count === 2) {
+      return (
+        <div className="grid grid-cols-2 gap-1 aspect-video rounded-xl overflow-hidden">
+          {validMedia.map((item, idx) => (
+            <div key={item.id} className="w-full h-full">
+              {renderMediaItem(item, idx)}
+            </div>
+          ))}
+        </div>
+      );
+    }
+    if (count === 3) {
+      return (
+        <div className="grid grid-cols-2 grid-rows-2 gap-1 aspect-video rounded-xl overflow-hidden">
+          <div className="row-span-2 col-span-1 w-full h-full">
+            {renderMediaItem(validMedia[0], 0)}
+          </div>
+          <div className="col-span-1 row-span-1 w-full h-full">
+            {renderMediaItem(validMedia[1], 1)}
+          </div>
+          <div className="col-span-1 row-span-1 w-full h-full">
+            {renderMediaItem(validMedia[2], 2)}
+          </div>
+        </div>
+      );
+    }
+    // 4 or more: show first 4 in 2x2 grid
+    return (
+      <div className="grid grid-cols-2 grid-rows-2 gap-1 aspect-video rounded-xl overflow-hidden">
+        {validMedia.slice(0, 4).map((item, idx) => (
+          <div key={item.id} className="w-full h-full relative">
+            {renderMediaItem(item, idx)}
+            {idx === 3 && count > 4 && (
+              <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-2xl font-bold">
+                +{count - 4}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  // --- Fullscreen Modal with Portal ---
+  const FullscreenModal = ({ open, mediaList, initialIndex, onClose }: { open: boolean, mediaList: PostMediaType[], initialIndex: number, onClose: () => void }) => {
+    const [current, setCurrent] = useState(initialIndex)
+
+    // Prevent background scroll when modal is open
+    React.useEffect(() => {
+      if (open) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+      return () => { document.body.style.overflow = '' }
+    }, [open])
+
+    if (!open) return null
+
+    const goNext = () => setCurrent((prev) => (prev + 1) % mediaList.length)
+    const goPrev = () => setCurrent((prev) => (prev - 1 + mediaList.length) % mediaList.length)
+
+    // Keyboard navigation
+    React.useEffect(() => {
+      const handler = (e: KeyboardEvent) => {
+        if (e.key === 'ArrowRight') goNext()
+        if (e.key === 'ArrowLeft') goPrev()
+        if (e.key === 'Escape') onClose()
+      }
+      window.addEventListener('keydown', handler)
+      return () => window.removeEventListener('keydown', handler)
+    })
+
+    return createPortal(
+      <div className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center p-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-4 right-4 text-white hover:bg-white/20 z-10"
+          onClick={onClose}
+        >
+          <X className="h-6 w-6" />
+        </Button>
+        {mediaList.length > 1 && (
+          <>
+            <Button onClick={goPrev} className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white hover:bg-black/60" size="icon">&#8592;</Button>
+            <Button onClick={goNext} className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white hover:bg-black/60" size="icon">&#8594;</Button>
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white px-3 py-1 rounded-full text-sm">{current + 1} / {mediaList.length}</div>
+          </>
+        )}
+        <div className="max-w-full max-h-full flex items-center justify-center">
+          {mediaList[current].mediaType === MediaType.IMAGE ? (
+            <img
+              src={mediaList[current].mediaUrl || "/placeholder.svg"}
+              alt={mediaList[current].fileName}
+              className="max-w-full max-h-[80vh] object-contain"
+            />
+          ) : (
+            <video src={mediaList[current].mediaUrl} controls className="max-w-full max-h-[80vh] object-contain" autoPlay>
+              Your browser does not support the video tag.
+            </video>
+          )}
+        </div>
+      </div>,
+      document.body
+    )
+  }
+
   return (
     <>
       <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-lg">
-        {validMedia.length === 1 ? (
-          renderMediaItem(validMedia[0], 0)
-        ) : (
-          <Carousel className="w-full">
-            <CarouselContent>
-              {validMedia.map((mediaItem, index) => (
-                <CarouselItem key={mediaItem.id}>{renderMediaItem(mediaItem, index)}</CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-3 h-9 w-9 bg-white/90 dark:bg-gray-900/90 hover:bg-white dark:hover:bg-gray-900 shadow-lg border-0" />
-            <CarouselNext className="right-3 h-9 w-9 bg-white/90 dark:bg-gray-900/90 hover:bg-white dark:hover:bg-gray-900 shadow-lg border-0" />
-
-            <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-sm font-medium">
-              1 / {validMedia.length}
-            </div>
-          </Carousel>
-        )}
+        {renderMediaGrid()}
       </div>
 
-      {/* Fullscreen Modal */}
-      {fullscreenMedia && (
-        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute top-4 right-4 text-white hover:bg-white/20 z-10"
-            onClick={closeFullscreen}
-          >
-            <X className="h-6 w-6" />
-          </Button>
-
-          <div className="max-w-full max-h-full flex items-center justify-center">
-            {fullscreenMedia.mediaType === MediaType.IMAGE ? (
-              <img
-                src={fullscreenMedia.mediaUrl || "/placeholder.svg"}
-                alt={fullscreenMedia.fileName}
-                className="max-w-full max-h-full object-contain"
-                onClick={closeFullscreen}
-              />
-            ) : (
-              <video src={fullscreenMedia.mediaUrl} controls className="max-w-full max-h-full object-contain" autoPlay>
-                Your browser does not support the video tag.
-              </video>
-            )}
-          </div>
-        </div>
-      )}
+      {/* Fullscreen Modal with navigation */}
+      <FullscreenModal open={!!fullscreenMedia} mediaList={validMedia} initialIndex={fullscreenMedia ? validMedia.findIndex(m => m.id === fullscreenMedia.id) : 0} onClose={closeFullscreen} />
     </>
   )
 }

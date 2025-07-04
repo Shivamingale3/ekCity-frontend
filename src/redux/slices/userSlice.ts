@@ -1,17 +1,14 @@
 // userSlice.ts
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { getUserFeed } from "../thunks/userThunk";
+import { getUserMedia } from "../thunks/userThunk";
 import type {
   UserInitialStates,
   GetUserFeedResponse,
 } from "../../types/userTypes";
+import { userInitialStates } from "../states/userStates";
 
-const initialState: UserInitialStates = {
-  error: null,
-  userPostsLoading: false,
-  userPosts: [],
-  userPostPagination: null,
-};
+const initialState: UserInitialStates = userInitialStates;
 
 const userSlice = createSlice({
   name: "user",
@@ -51,6 +48,23 @@ const userSlice = createSlice({
       .addCase(getUserFeed.rejected, (state, action) => {
         state.userPostsLoading = false;
         state.error = action.error.message || "Failed to fetch user posts";
+      });
+
+    // User Media
+    builder
+      .addCase(getUserMedia.pending, (state) => {
+        state.userMediaLoading = true;
+        state.userMediaError = null;
+      })
+      .addCase(getUserMedia.fulfilled, (state, action) => {
+        state.userMediaLoading = false;
+        state.userMedia = action.payload.data;
+        state.userMediaError = null;
+      })
+      .addCase(getUserMedia.rejected, (state, action) => {
+        state.userMediaLoading = false;
+        state.userMediaError =
+          action.error.message || "Failed to fetch user media";
       });
   },
 });

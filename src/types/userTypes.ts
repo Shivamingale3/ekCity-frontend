@@ -5,6 +5,9 @@ export type UserInitialStates = {
   userPostsLoading: boolean;
   userPosts: Post[];
   userPostPagination: Pagination;
+  userMedia: UserMediaData | null;
+  userMediaLoading: boolean;
+  userMediaError: string | null;
 };
 
 export type GetUserFeedResponse = {
@@ -22,3 +25,20 @@ export type Pagination = {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
 } | null;
+
+// User Media API Types
+export type UserMediaPostMedia = {
+  images: string[];
+  videos: string[];
+};
+
+export type UserMediaData = {
+  profilePictures: string[];
+  postMedia: UserMediaPostMedia;
+};
+
+export type UserMediaResponse = {
+  status: string;
+  message: string;
+  data: UserMediaData;
+};

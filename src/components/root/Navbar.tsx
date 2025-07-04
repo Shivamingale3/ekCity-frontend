@@ -4,6 +4,8 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
 import ProfileMenu from "./ProfileMenu";
 import { useAuthStore } from "@/stores/authStore";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 
 function Navbar() {
   const { isDark } = useTheme();
@@ -11,17 +13,32 @@ function Navbar() {
   const light = "/logo_light.png";
   const [image, setImage] = useState<string>(light);
   const { user } = useAuthStore();
+  const navigate = useNavigate();
+
+  // Fix: Use useRouterState to get current location
+  const routerState = useRouterState();
+  const isProfile = routerState.location.pathname === "/profile";
 
   useEffect(() => {
     setImage(isDark ? dark : light);
   }, [isDark]);
-  console.log(user)
 
+  console.log(user)
 
   return (
     <div className="w-full h-[8vh] sm:h-[9vh] lg:h-[10vh] min-h-[50px] sm:min-h-[60px] bg-light-bg-primary border-b border-gray-300 dark:border-gray-800 drop-shadow-lg px-3 sm:px-6 lg:px-10 flex justify-between items-center text-light-text-primary">
       {/* Logo Section */}
-      <div className="flex justify-center items-center w-max h-max flex-shrink-0">
+      <div className="flex items-center gap-2 w-max h-max flex-shrink-0">
+        {isProfile && (
+          <button
+            className="flex items-center justify-center rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            style={{ height: 32, width: 32 }}
+            onClick={() => navigate({ to: "/feed" })}
+            aria-label="Back to feed"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+        )}
         <img
           src={image}
           alt="ek-City logo"
