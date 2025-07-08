@@ -2,6 +2,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { getUserFeed } from "../thunks/userThunk";
 import { getUserMedia } from "../thunks/userThunk";
+import { updateUserProfile } from "../thunks/userThunk";
 import type {
   UserInitialStates,
   GetUserFeedResponse,
@@ -65,6 +66,25 @@ const userSlice = createSlice({
         state.userMediaLoading = false;
         state.userMediaError =
           action.error.message || "Failed to fetch user media";
+      });
+
+    // Update User Profile
+    builder
+      .addCase(updateUserProfile.pending, (state) => {
+        state.updateUserLoading = true;
+        state.updateUserError = null;
+        state.updateUserSuccess = false;
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.updateUserLoading = false;
+        state.updateUserError = null;
+        state.updateUserSuccess = true;
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
+        state.updateUserLoading = false;
+        state.updateUserError =
+          action.payload || action.error.message || "Failed to update user";
+        state.updateUserSuccess = false;
       });
   },
 });

@@ -7,5 +7,8 @@ export const userInitialStates: UserInitialStates = {
     userPostPagination: null,
     userMedia: null,
     userMediaLoading: false,
-    userMediaError: null
+    userMediaError: null,
+    updateUserLoading: false,
+    updateUserError: null,
+    updateUserSuccess: false
 }

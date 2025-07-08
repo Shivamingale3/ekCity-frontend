@@ -8,19 +8,22 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/authStore";
 import type { Post } from "@/types/postTypes";
-import { Edit, LogOut, ArrowLeft } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { ArrowLeft, Edit, LogOut } from "lucide-react";
 import React, { useEffect, useState } from 'react';
 import { ThemeToggleDropdown } from "../root/ThemeToggle";
-import { useNavigate } from "@tanstack/react-router";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { updateUserProfile } from "@/redux/thunks/userThunk";
 
 function ProfileHeader() {
-    const { user, logout } = useAuthStore();
+    const { user, logout, setUser } = useAuthStore();
     const [_userPosts, setUserPosts] = useState<Post[]>([])
     const [_userMedia, setUserMedia] = useState<any[]>([])
     const [_loading, setLoading] = useState(true)
     const [editDialogOpen, setEditDialogOpen] = useState(false)
     const [editData, setEditData] = useState({
-        name: user?.fullName || "",
+        firstName: user?.firstName || "",
+        lastName: user?.lastName || "",
         email: user?.email || "",
         mobile: user?.mobile || "",
         profilePicture: null as File | null,
@@ -28,6 +31,8 @@ function ProfileHeader() {
 
     const { toast } = useToast();
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const updateUserLoading = useAppSelector(state => state.user.updateUserLoading);
 
     useEffect(() => {
         if (user) {
@@ -63,34 +68,31 @@ function ProfileHeader() {
     }
 
     const handleUpdateProfile = async (e: React.FormEvent) => {
-        e.preventDefault()
-
+        e.preventDefault();
+        if (!user) return;
+        console.log('handleUpdateProfile called', editData);
         try {
-            const formData = new FormData()
-            formData.append("name", editData.name)
-            formData.append("email", editData.email)
-            formData.append("mobile", editData.mobile)
-            if (editData.profilePicture) {
-                formData.append("profilePicture", editData.profilePicture)
-            }
-
-            const response = await fetch("/api/users/profile", {
-                method: "PUT",
-                body: formData,
-            })
-
-            if (response.ok) {
-                toast({ title: "Profile updated!", description: "Your profile has been updated successfully" })
-                setEditDialogOpen(false)
-                // Refresh page to get updated user data
-                window.location.reload()
+            const resultAction = await dispatch(updateUserProfile({
+                id: user.id,
+                updateData: {
+                    email: editData.email,
+                    firstName: editData.firstName,
+                    lastName: editData.lastName,
+                    mobile: editData.mobile,
+                    profilePicture: editData.profilePicture,
+                },
+            }));
+            if (updateUserProfile.fulfilled.match(resultAction)) {
+                setUser(resultAction.payload);
+                toast({ title: "Profile updated!", description: "Your profile has been updated successfully" });
+                setEditDialogOpen(false);
             } else {
-                throw new Error("Failed to update profile")
+                throw new Error(resultAction.payload || resultAction.error?.message || "Failed to update profile");
             }
-        } catch (error) {
-            toast({ title: "Error", description: "Failed to update profile", variant: "destructive" })
+        } catch (error: any) {
+            toast({ title: "Error", description: error.message || "Failed to update profile", variant: "destructive" });
         }
-    }
+    };
 
     if (!user) {
         return (
@@ -140,11 +142,19 @@ function ProfileHeader() {
                                         </DialogHeader>
                                         <form onSubmit={handleUpdateProfile} className="space-y-4">
                                             <div className="space-y-2">
-                                                <Label htmlFor="edit-name">Name</Label>
+                                                <Label htmlFor="edit-name">First Name</Label>
                                                 <Input
                                                     id="edit-name"
-                                                    value={editData.name}
-                                                    onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                                                    value={editData.firstName}
+                                                    onChange={(e) => setEditData({ ...editData, firstName: e.target.value })}
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="edit-name">Last Name</Label>
+                                                <Input
+                                                    id="edit-name"
+                                                    value={editData.lastName}
+                                                    onChange={(e) => setEditData({ ...editData, lastName: e.target.value })}
                                                 />
                                             </div>
                                             <div className="space-y-2">
@@ -173,8 +183,8 @@ function ProfileHeader() {
                                                     onChange={(e) => setEditData({ ...editData, profilePicture: e.target.files?.[0] || null })}
                                                 />
                                             </div>
-                                            <Button type="submit" className="w-full">
-                                                Update Profile
+                                            <Button type="submit" className="w-full" disabled={updateUserLoading}>
+                                                {updateUserLoading ? "Updating..." : "Update Profile"}
                                             </Button>
                                         </form>
                                     </DialogContent>

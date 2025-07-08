@@ -12,7 +12,8 @@ export const PostTags: React.FC<PostTagsProps> = ({ tags }) => {
       {tags.map((tag) => (
         <span
           key={tag}
-          className="inline-flex items-center px-2 sm:px-2.5 md:px-3 lg:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-xs sm:text-sm md:text-base lg:text-lg font-medium bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-950/50 transition-colors cursor-pointer break-words max-w-full"
+          className="inline-flex items-center px-1.5 py-0.5 rounded-lg
+           text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-950/50 transition-colors cursor-pointer break-words max-w-full border border-blue-200 dark:border-blue-800"
         >
           <span className="truncate">#{tag}</span>
         </span>

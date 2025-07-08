@@ -8,6 +8,9 @@ export type UserInitialStates = {
   userMedia: UserMediaData | null;
   userMediaLoading: boolean;
   userMediaError: string | null;
+  updateUserLoading: boolean;
+  updateUserError: string | null;
+  updateUserSuccess: boolean;
 };
 
 export type GetUserFeedResponse = {
