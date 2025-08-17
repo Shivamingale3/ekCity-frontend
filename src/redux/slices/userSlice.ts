@@ -75,7 +75,7 @@ const userSlice = createSlice({
         state.updateUserError = null;
         state.updateUserSuccess = false;
       })
-      .addCase(updateUserProfile.fulfilled, (state, action) => {
+      .addCase(updateUserProfile.fulfilled, (state) => {
         state.updateUserLoading = false;
         state.updateUserError = null;
         state.updateUserSuccess = true;
