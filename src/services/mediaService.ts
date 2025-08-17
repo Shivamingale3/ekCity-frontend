@@ -22,6 +22,7 @@ export async function uploadMediaToCloudinary({
     { uploadType, resourceType, publicId, eager, chunkSize },
     { withCredentials: true }
   );
+  console.log(onProgress);
 
   const { uploadUrl, params } = presignRes.data.data; // Note: using 'params' instead of 'fields'
   if (!uploadUrl) throw new Error("No upload URL received from backend");
