@@ -1,11 +1,12 @@
-import { useTheme } from "../../hooks/useTheme";
-import { useEffect, useState } from "react";
-import LanguageSwitcher from "./LanguageSwitcher";
-import { ThemeToggle } from "./ThemeToggle";
-import ProfileMenu from "./ProfileMenu";
 import { useAuthStore } from "@/stores/authStore";
-import { ArrowLeft } from "lucide-react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
+import { ArrowLeft, ShieldAlert } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useTheme } from "../../hooks/useTheme";
+import LanguageSwitcher from "./LanguageSwitcher";
+import ProfileMenu from "./ProfileMenu";
+import { ThemeToggle } from "./ThemeToggle";
+import { UserRole } from "@/types/authTypes";
 
 function Navbar() {
   const { isDark } = useTheme();
@@ -23,10 +24,8 @@ function Navbar() {
     setImage(isDark ? dark : light);
   }, [isDark]);
 
-  console.log(user)
-
   return (
-    <div className="w-full h-[8vh] sm:h-[9vh] lg:h-[10vh] min-h-[50px] sm:min-h-[60px] bg-light-bg-primary border-b border-gray-300 dark:border-gray-800 drop-shadow-lg px-3 sm:px-6 lg:px-10 flex justify-between items-center text-light-text-primary">
+    <div className="w-full h-[8vh] sm:h-[9vh] lg:h-[10vh] min-h-[50px] sm:min-h-[60px] bg-light-bg-primary border-b border-input drop-shadow-lg px-3 sm:px-6 lg:px-10 flex justify-between items-center text-light-text-primary">
       {/* Logo Section */}
       <div className="flex items-center gap-2 w-max h-max flex-shrink-0">
         {isProfile && (
@@ -48,7 +47,14 @@ function Navbar() {
 
       {/* Actions Section */}
       <div className="flex justify-center items-center gap-1 sm:gap-2 md:gap-3 lg:gap-4 xl:gap-5">
-        {/* Hide language switcher on very small screens */}
+        {user && user.role === UserRole.CITIZEN && (
+          <button
+            className="rounded-full border border-red-500 p-2 "
+            onClick={() => navigate({ to: "/report" })}
+          >
+            <ShieldAlert className="text-red-500" />
+          </button>
+        )}
         <div className="hidden sm:block">
           <LanguageSwitcher />
         </div>

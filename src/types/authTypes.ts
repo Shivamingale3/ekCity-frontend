@@ -30,7 +30,7 @@ export type User = {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
-} | null;
+};
 
 export type AuthTokens = {
   accessToken: string;

@@ -5,7 +5,6 @@ import { ThemeProvider } from './hooks/useTheme';
 import { Toaster } from './components/ui/sonner';
 
 function App() {
-
   return (
     <ThemeProvider storageKey="vite-ui-theme">
       <RouterProvider router={router} />
