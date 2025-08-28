@@ -113,7 +113,6 @@ function ReportWebParent() {
         setReport("");
         setCapturedFile(null);
         setSubmitting(false);
-        
       }
     } catch (error) {
       toast.error("Failed to submit report! Please try again!");
@@ -140,7 +139,9 @@ function ReportWebParent() {
           </Button>
           <Button
             onClick={onClickSubmitReport}
-            disabled={report.length === 0 || !capturedFile?.file}
+            disabled={
+              report.length === 0 || !capturedFile?.file || reportTo === ""
+            }
           >
             {submitting ? (
               <>

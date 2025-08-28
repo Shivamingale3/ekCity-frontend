@@ -10,12 +10,16 @@ function ReportStep3({
   onClickSubmitReport,
   isAnonymous,
   setIsAnonymous,
+  reportTo,
+  setReportTo,
 }: {
   reportDetails: string;
   setReportDetails: Dispatch<SetStateAction<string>>;
   onClickSubmitReport: () => void;
   isAnonymous: string;
   setIsAnonymous: Dispatch<SetStateAction<"yes" | "no">>;
+  reportTo: string;
+  setReportTo: Dispatch<SetStateAction<string>>;
 }) {
   return (
     <div className="border border-input w-full h-full p-5 flex flex-col justify-start items-center gap-5">
@@ -26,7 +30,7 @@ function ReportStep3({
         isAnonymous={isAnonymous}
         setIsAnonymous={setIsAnonymous}
       />
-      <SelectAuthority />
+      <SelectAuthority reportTo={reportTo} setReportTo={setReportTo} />
       <ReportDescription value={reportDetails} setValue={setReportDetails} />
       <div className="w-full flex justify-around items-center">
         <Button
@@ -35,7 +39,12 @@ function ReportStep3({
         >
           Clear
         </Button>
-        <Button onClick={onClickSubmitReport}>Submit</Button>
+        <Button
+          onClick={onClickSubmitReport}
+          disabled={reportDetails.length === 0 || reportTo === ""}
+        >
+          Submit
+        </Button>
       </div>
     </div>
   );

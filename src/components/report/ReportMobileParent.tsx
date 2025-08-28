@@ -1,4 +1,5 @@
-import { apiService } from "@/services/apiService";
+import { useAppDispatch } from "@/redux/store";
+import { createReport } from "@/redux/thunks/reportsThunk";
 import { Loader } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type Webcam from "react-webcam";
@@ -8,6 +9,7 @@ import ReportStep1 from "./ReportStep1";
 import ReportStep3 from "./ReportStep3";
 
 function ReportMobileParent() {
+  const dispatch = useAppDispatch();
   const [currentStep, setCurrentStep] = useState<number>(1);
   const webcamRef = useRef<Webcam>(null);
   const [facingMode, setFacingMode] = useState<"user" | "environment">("user");
@@ -29,6 +31,7 @@ function ReportMobileParent() {
   } | null>(null);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [isAnonymous, setIsAnonymous] = useState<"yes" | "no">("no");
+  const [reportTo, setReportTo] = useState<string>("");
 
   const startRecording = () => {
     setCapturing(true);
@@ -110,27 +113,23 @@ function ReportMobileParent() {
       return;
     }
     try {
-      let formData = new FormData();
-      formData.append(
-        "file",
-        capturedFile?.file as Blob,
-        `${
-          capturedFile?.type === "img" ? "reportPhoto.png" : "reportVideo.webm"
-        }`
+      const response = await dispatch(
+        createReport({
+          anonymous: isAnonymous,
+          file: capturedFile,
+          report,
+          reportTo,
+        })
       );
-      formData.append("report", report);
-      formData.append("isAnonymous", isAnonymous);
 
-      const response = await apiService.post("/report", formData);
-      console.log(response);
-      if (response.status === 200) {
+      if (response.type === "reports/create/fulfilled") {
         toast.success("Report submitted successfully!");
-        setCurrentStep(1);
         setPreviewImage("");
         setPreviewVideo("");
         setReport("");
         setCapturedFile(null);
         setSubmitting(false);
+        setCurrentStep(1);
       }
     } catch (error) {
       toast.error("Failed to submit report! Please try again!");
@@ -171,6 +170,8 @@ function ReportMobileParent() {
           reportDetails={report}
           setReportDetails={setReport}
           onClickSubmitReport={onClickSubmitReport}
+          reportTo={reportTo}
+          setReportTo={setReportTo}
         />
       ) : (
         <></>
