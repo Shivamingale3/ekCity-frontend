@@ -9,6 +9,7 @@ import {
 import rootReducer from "./../redux/slices/rootSlice";
 import feedReducer from "./../redux/slices/feedSlice";
 import userReducer from "./../redux/slices/userSlice";
+import reportsReducer from "./../redux/slices/reportsSlice";
 // import workspaceReducer from "./../slices/workspaceSlice";
 
 export const store = configureStore({
@@ -16,6 +17,7 @@ export const store = configureStore({
     root: rootReducer,
     feed: feedReducer,
     user: userReducer,
+    reports: reportsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

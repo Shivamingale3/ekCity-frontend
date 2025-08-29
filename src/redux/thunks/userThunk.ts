@@ -1,9 +1,12 @@
 import { apiService } from "@/services/apiService";
-import type { GetUserFeedResponse } from "@/types/userTypes";
-import type { UserMediaResponse } from "@/types/userTypes";
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import { uploadMediaToCloudinary } from "@/services/mediaService";
 import type { User } from "@/types/authTypes";
+import type {
+  GetUserByIdResponse,
+  GetUserFeedResponse,
+  UserMediaResponse,
+} from "@/types/userTypes";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getUserFeed = createAsyncThunk<
   GetUserFeedResponse,
@@ -79,5 +82,19 @@ export const updateUserProfile = createAsyncThunk<
     return response.data.data;
   } catch (error: any) {
     return rejectWithValue(error.message || "Failed to update user");
+  }
+});
+
+export const getUserById = createAsyncThunk<
+  GetUserByIdResponse,
+  { userId: string }
+>("users/get-by-id", async ({ userId }, { rejectWithValue }) => {
+  try {
+    const response = await apiService.get<GetUserByIdResponse>(
+      `/users/${userId}`
+    );
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error);
   }
 });

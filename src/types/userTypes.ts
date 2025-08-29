@@ -1,3 +1,4 @@
+import type { User } from "./authTypes";
 import type { Post } from "./postTypes";
 
 export type UserInitialStates = {
@@ -44,4 +45,10 @@ export type UserMediaResponse = {
   status: string;
   message: string;
   data: UserMediaData;
+};
+
+export type GetUserByIdResponse = {
+  status: string;
+  message: string;
+  data: User;
 };

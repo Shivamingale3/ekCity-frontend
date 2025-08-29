@@ -1,3 +1,9 @@
+import { useAuthStore } from "@/stores/authStore";
+import { UserRole } from "@/types/authTypes";
+import { getInitials } from "@/utils/universalFunctions";
+import { useNavigate } from "@tanstack/react-router";
+import { LogOut, ShieldAlert, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -5,11 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { User, LogOut } from "lucide-react";
-import { getInitials } from "@/utils/universalFunctions";
-import { useAuthStore } from "@/stores/authStore";
-import { useNavigate } from "@tanstack/react-router";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 function ProfileMenu() {
   const { user, logout } = useAuthStore();
@@ -50,9 +51,15 @@ function ProfileMenu() {
               </Avatar>
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium">
-                  {user.firstName} {user.lastName}
+                  {user.fullName.length > 20
+                    ? `${user.fullName.slice(0, 20)}...`
+                    : user.fullName}
                 </p>
-                <p className="text-xs text-muted-foreground">{user.email}</p>
+                <p className="text-xs text-muted-foreground">
+                  {user.email.length > 20
+                    ? `${user.email.slice(0, 20)}...`
+                    : user.email}
+                </p>
               </div>
             </div>
             <DropdownMenuSeparator />
@@ -60,6 +67,14 @@ function ProfileMenu() {
               <User className="mr-2 h-4 w-4" />
               View Profile
             </DropdownMenuItem>
+            {user.role === UserRole.GOVERNMENT && (
+              <DropdownMenuItem
+                onClick={() => navigate({ to: "/admin/reports" })}
+              >
+                <ShieldAlert className="text-red-500 mr-2 h-4 w-4" />
+                View Reports
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               Logout

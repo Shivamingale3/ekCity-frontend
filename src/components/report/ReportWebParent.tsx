@@ -9,6 +9,7 @@ import { useRef, useState } from "react";
 import type Webcam from "react-webcam";
 import { toast } from "sonner";
 import MediaPreview from "./MediaPreview";
+import ReportTitle from "./ReportTitle";
 import WebCameraScreen from "./WebCameraScreen";
 
 function ReportWebParent() {
@@ -27,6 +28,7 @@ function ReportWebParent() {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [isAnonymous, setIsAnonymous] = useState<"yes" | "no">("no");
   const [reportTo, setReportTo] = useState<string>("");
+  const [reportTitle, setReportTitle] = useState<string>("");
   const videoConstraints = {
     facingMode: facingMode,
     width: { ideal: 1280 },
@@ -101,6 +103,7 @@ function ReportWebParent() {
         createReport({
           anonymous: isAnonymous,
           file: capturedFile,
+          reportTitle,
           report,
           reportTo,
         })
@@ -111,6 +114,7 @@ function ReportWebParent() {
         setPreviewImage("");
         setPreviewVideo("");
         setReport("");
+        setReportTitle("");
         setCapturedFile(null);
         setSubmitting(false);
       }
@@ -132,6 +136,10 @@ function ReportWebParent() {
           setIsAnonymous={setIsAnonymous}
         />
         <SelectAuthority reportTo={reportTo} setReportTo={setReportTo} />
+        <ReportTitle
+          reportTitle={reportTitle}
+          setReportTitle={setReportTitle}
+        />
         <ReportDescription value={report} setValue={setReport} />
         <div className="w-full flex justify-around items-center">
           <Button onClick={() => setReport("")} disabled={report.length === 0}>
@@ -140,7 +148,10 @@ function ReportWebParent() {
           <Button
             onClick={onClickSubmitReport}
             disabled={
-              report.length === 0 || !capturedFile?.file || reportTo === ""
+              report.length === 0 ||
+              !capturedFile?.file ||
+              reportTo === "" ||
+              reportTitle === ""
             }
           >
             {submitting ? (

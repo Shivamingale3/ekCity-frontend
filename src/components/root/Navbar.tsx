@@ -1,4 +1,5 @@
 import { useAuthStore } from "@/stores/authStore";
+import { UserRole } from "@/types/authTypes";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, ShieldAlert } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -6,7 +7,6 @@ import { useTheme } from "../../hooks/useTheme";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ProfileMenu from "./ProfileMenu";
 import { ThemeToggle } from "./ThemeToggle";
-import { UserRole } from "@/types/authTypes";
 
 function Navbar() {
   const { isDark } = useTheme();
@@ -39,9 +39,10 @@ function Navbar() {
           </button>
         )}
         <img
+          onClick={() => navigate({ to: "/feed" })}
           src={image}
           alt="ek-City logo"
-          className="h-6 w-12 sm:h-16 sm:w-32 md:h-10 md:w-20 lg:h-12 lg:w-24 xl:h-[70px] xl:w-[135px] object-contain"
+          className="h-6 w-12 sm:h-16 sm:w-32 md:h-10 md:w-20 lg:h-12 lg:w-24 xl:h-[70px] xl:w-[135px] object-contain cursor-pointer"
         />
       </div>
 

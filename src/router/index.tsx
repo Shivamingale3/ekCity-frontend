@@ -12,6 +12,7 @@ import RootLayout from "@/layouts/RootLayout";
 import Feed from "@/pages/Feed";
 
 import { AuthGuard } from "@/components/AuthGuard";
+import ReportsAdminParent from "@/components/report/admin/ReportsAdminParent";
 import ReportLayout from "@/layouts/ReportLayout";
 import ErrorPage from "@/pages/ErrorPages/ErrorPage";
 import { ForbiddenPage } from "@/pages/ErrorPages/ForbiddenPage";
@@ -133,14 +134,13 @@ const serverErrorRoute = createRoute({
   component: ServerErrorPage,
 });
 
-const complaintRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/report",
-  component: () => <ReportLayout />,
-});
-
 // Protected routes with specific error handling
 const feedRoute = createProtectedRoute("/feed", Feed);
+const reportRoute = createProtectedRoute("/report", ReportLayout);
+const reportAdminRoute = createProtectedRoute(
+  "/admin/reports",
+  ReportsAdminParent
+);
 const profileRoute = createProtectedRoute("/profile", ProfileLayout, {
   errorComponent: ForbiddenPage, // Custom error page for profile
 });
@@ -156,7 +156,8 @@ const routeTree = rootRoute.addChildren([
   unauthorizedRoute,
   forbiddenRoute,
   serverErrorRoute,
-  complaintRoute,
+  reportRoute,
+  reportAdminRoute,
 ]);
 
 // Router

@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import AnonymousSelector from "./AnanymousSelector";
 import ReportDescription from "./ReportDescription";
 import SelectAuthority from "./SelectAuthority";
+import ReportTitle from "./ReportTitle";
 
 function ReportStep3({
   reportDetails,
@@ -12,6 +13,8 @@ function ReportStep3({
   setIsAnonymous,
   reportTo,
   setReportTo,
+  reportTitle,
+  setReportTitle,
 }: {
   reportDetails: string;
   setReportDetails: Dispatch<SetStateAction<string>>;
@@ -20,6 +23,8 @@ function ReportStep3({
   setIsAnonymous: Dispatch<SetStateAction<"yes" | "no">>;
   reportTo: string;
   setReportTo: Dispatch<SetStateAction<string>>;
+  reportTitle: string;
+  setReportTitle: Dispatch<SetStateAction<string>>;
 }) {
   return (
     <div className="border border-input w-full h-full p-5 flex flex-col justify-start items-center gap-5">
@@ -31,6 +36,7 @@ function ReportStep3({
         setIsAnonymous={setIsAnonymous}
       />
       <SelectAuthority reportTo={reportTo} setReportTo={setReportTo} />
+      <ReportTitle reportTitle={reportTitle} setReportTitle={setReportTitle} />
       <ReportDescription value={reportDetails} setValue={setReportDetails} />
       <div className="w-full flex justify-around items-center">
         <Button
@@ -41,7 +47,9 @@ function ReportStep3({
         </Button>
         <Button
           onClick={onClickSubmitReport}
-          disabled={reportDetails.length === 0 || reportTo === ""}
+          disabled={
+            reportDetails.length === 0 || reportTo === "" || reportTitle === ""
+          }
         >
           Submit
         </Button>

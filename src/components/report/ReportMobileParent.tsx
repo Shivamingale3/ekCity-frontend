@@ -32,6 +32,7 @@ function ReportMobileParent() {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [isAnonymous, setIsAnonymous] = useState<"yes" | "no">("no");
   const [reportTo, setReportTo] = useState<string>("");
+  const [reportTitle, setReportTitle] = useState<string>("");
 
   const startRecording = () => {
     setCapturing(true);
@@ -117,6 +118,7 @@ function ReportMobileParent() {
         createReport({
           anonymous: isAnonymous,
           file: capturedFile,
+          reportTitle,
           report,
           reportTo,
         })
@@ -127,6 +129,7 @@ function ReportMobileParent() {
         setPreviewImage("");
         setPreviewVideo("");
         setReport("");
+        setReportTitle("");
         setCapturedFile(null);
         setSubmitting(false);
         setCurrentStep(1);
@@ -172,6 +175,8 @@ function ReportMobileParent() {
           onClickSubmitReport={onClickSubmitReport}
           reportTo={reportTo}
           setReportTo={setReportTo}
+          reportTitle={reportTitle}
+          setReportTitle={setReportTitle}
         />
       ) : (
         <></>

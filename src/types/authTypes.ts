@@ -47,7 +47,7 @@ export type AuthResponse = {
 };
 
 export type AuthState = {
-  user: User;
+  user: User | null;
   status: AuthStatus;
   error: string | null;
   isLoading: boolean;

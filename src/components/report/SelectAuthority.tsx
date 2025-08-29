@@ -27,8 +27,8 @@ function SelectAuthority({
   useEffect(() => {
     if (govtBodies.length > 0) {
       setReportTo(
-        govtBodies.find((user) => user?.fullName.includes("Police"))
-          ?.fullName ?? "Select Authority"
+        govtBodies.find((user) => user?.fullName.includes("Police"))?.id ??
+          "Select Authority"
       );
     }
   }, [govtBodies]);
