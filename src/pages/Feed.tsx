@@ -7,10 +7,13 @@ import { Loader2, RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { clearError } from "../redux/slices/feedSlice";
 import { useAppDispatch, useAppSelector, type RootState } from "../redux/store";
-import { fetchPosts, loadMorePosts, refreshPosts } from "../redux/thunks/feedThunk";
+import {
+  fetchPosts,
+  loadMorePosts,
+  refreshPosts,
+} from "../redux/thunks/feedThunk";
 import { useAuthStore } from "../stores/authStore";
 import type { Post } from "../types/postTypes";
-
 
 function Feed() {
   const { user } = useAuthStore();
@@ -57,7 +60,7 @@ function Feed() {
 
   // Add CSS to disable browser pull-to-refresh
   useEffect(() => {
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       * {
         overscroll-behavior-y: contain;
@@ -112,31 +115,38 @@ function Feed() {
   }, [dispatch, refreshing, loading]);
 
   // Handle touch start
-  const pullStart = useCallback((e: React.TouchEvent) => {
-    if (!isAtTop || refreshing || loading) return;
+  const pullStart = useCallback(
+    (e: React.TouchEvent) => {
+      if (!isAtTop || refreshing || loading) return;
 
-    const { screenY } = e.touches[0];
-    setStartPoint(screenY);
-    setIsPulling(false);
-  }, [isAtTop, refreshing, loading]);
+      const { screenY } = e.touches[0];
+      setStartPoint(screenY);
+      setIsPulling(false);
+    },
+    [isAtTop, refreshing, loading]
+  );
 
   // Handle touch move
-  const pull = useCallback((e: React.TouchEvent) => {
-    if (!isAtTop || refreshing || loading || startPoint === 0) return;
+  const pull = useCallback(
+    (e: React.TouchEvent) => {
+      if (!isAtTop || refreshing || loading || startPoint === 0) return;
 
-    const touch = e.touches[0];
-    const { screenY } = touch;
+      const touch = e.touches[0];
+      const { screenY } = touch;
 
-    // Calculate pull length
-    let pullLength = startPoint < screenY ? Math.abs(screenY - startPoint) : 0;
+      // Calculate pull length
+      let pullLength =
+        startPoint < screenY ? Math.abs(screenY - startPoint) : 0;
 
-    if (pullLength > 0) {
-      // Prevent default scroll when pulling
-      e.preventDefault();
-      setIsPulling(true);
-      setPullChange(pullLength);
-    }
-  }, [isAtTop, refreshing, loading, startPoint]);
+      if (pullLength > 0) {
+        // Prevent default scroll when pulling
+        e.preventDefault();
+        setIsPulling(true);
+        setPullChange(pullLength);
+      }
+    },
+    [isAtTop, refreshing, loading, startPoint]
+  );
 
   // Handle touch end
   const endPull = useCallback(() => {
@@ -189,7 +199,6 @@ function Feed() {
 
   return (
     <div className="w-full h-full flex flex-col justify-start items-center relative pull-refresh-container">
-
       {/* Error handling */}
       {error && (
         <div className="w-full p-4 bg-red-50 border border-red-200 text-red-700 text-center">
@@ -227,11 +236,13 @@ function Feed() {
         className="w-full h-full overflow-y-auto custom-scrollbar transition-transform duration-300 ease-out"
         onScroll={handleScroll}
         style={{
-          transform: isPulling ? `translateY(${pullChange * 0.3}px)` : 'translateY(0px)'
+          transform: isPulling
+            ? `translateY(${pullChange * 0.3}px)`
+            : "translateY(0px)",
         }}
       >
         <div className="flex flex-col justify-center items-center gap-3 sm:gap-4 md:gap-5 w-full py-4 sm:py-6 md:py-8 lg:py-10 px-2 sm:px-4 md:px-6">
-          {posts.map((post) => (
+          {(posts || []).map((post) => (
             <PostComponent
               postData={post}
               key={post.id}

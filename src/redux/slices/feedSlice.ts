@@ -40,7 +40,7 @@ const postsSlice = createSlice({
         fetchPosts.fulfilled,
         (state, action: PayloadAction<GetFeedResponse>) => {
           state.loading = false;
-          state.posts = action.payload.data.posts;
+          state.posts = action.payload.data.posts || [];
           state.pagination = action.payload.data.pagination;
           state.lastFetchTime = Date.now();
           state.error = null;
@@ -63,7 +63,7 @@ const postsSlice = createSlice({
 
           // FIX: For refresh, replace all posts (don't prepend)
           // This ensures that even if there are no posts, the refresh completes properly
-          state.posts = action.payload.data.posts;
+          state.posts = action.payload.data.posts || [];
           state.pagination = action.payload.data.pagination;
           state.lastFetchTime = Date.now();
           state.error = null;
@@ -84,7 +84,7 @@ const postsSlice = createSlice({
         (state, action: PayloadAction<GetFeedResponse>) => {
           state.loadingMore = false;
           // Append new posts and remove duplicates
-          const newPosts = action.payload.data.posts;
+          const newPosts = action.payload.data.posts || [];
           const existingPostIds = new Set(state.posts.map((post) => post.id));
           const uniqueNewPosts = newPosts.filter(
             (post) => !existingPostIds.has(post.id)
