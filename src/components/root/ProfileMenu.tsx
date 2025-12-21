@@ -15,9 +15,6 @@ import {
 function ProfileMenu() {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
-
-  const displayName = user?.fullName || user?.email || "User";
-
   const handleViewProfile = () => {
     navigate({ to: "/profile", replace: true });
   };
@@ -39,7 +36,7 @@ function ProfileMenu() {
                   className="bg-white border border-gray-300 dark:bg-white"
                 />
                 <AvatarFallback className="text-xs bg-black dark:bg-white text-white dark:text-black">
-                  {getInitials(displayName)}
+                  {getInitials(user.fullName)}
                 </AvatarFallback>
               </Avatar>
             </button>
@@ -49,14 +46,14 @@ function ProfileMenu() {
               <Avatar className="h-8 w-8">
                 <AvatarImage src={user.profilePicture ?? ""} alt="profile" />
                 <AvatarFallback className="text-xs bg-black dark:bg-white text-white dark:text-black">
-                  {getInitials(displayName)}
+                  {getInitials(user.fullName)}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium">
-                  {displayName.length > 20
-                    ? `${displayName.slice(0, 20)}...`
-                    : displayName}
+                  {user.fullName.length > 20
+                    ? `${user.fullName.slice(0, 20)}...`
+                    : user.fullName}
                 </p>
                 <p className="text-xs text-muted-foreground">
                   {user.email.length > 20

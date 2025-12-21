@@ -156,23 +156,16 @@ export const replyToComment = createAsyncThunk<
   }
 );
 
-export const getBodiesToCollab = createAsyncThunk<
-  GetBodiesResponse,
-  { page?: number; limit?: number } | null | undefined
->("posts/getBodiesToCollab", async (params, { rejectWithValue }) => {
-  try {
-    const { page = 1, limit = 100 } = params || {};
-    const response = await apiService.get<GetBodiesResponse>(
-      "/users/users-to-collab",
-      {
-        params: {
-          page,
-          limit,
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(error.message);
+export const getBodiesToCollab = createAsyncThunk<GetBodiesResponse, null>(
+  "posts/getBodiesToCollab",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await apiService.get<GetBodiesResponse>(
+        "/users/users-to-collab"
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);

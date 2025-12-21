@@ -24,8 +24,7 @@ export const getTimeAgo = (dateString: string) => {
   if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`;
   return `${Math.floor(diffInSeconds / 86400)}d`;
 };
-export const getInitials = (name: string | null | undefined) => {
-  if (!name) return "";
+export const getInitials = (name: string) => {
   return name
     .split(" ")
     .map((n) => n[0])
