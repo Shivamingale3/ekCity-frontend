@@ -3,6 +3,7 @@ import type { CollaboratorBody, Post } from "../../types/postTypes";
 
 export interface PostsState {
   posts: Post[];
+  selectedPost: Post | null;
   loading: boolean;
   refreshing: boolean;
   loadingMore: boolean;
@@ -25,6 +26,7 @@ export interface PostsState {
 
 export const feedInitialState: PostsState = {
   posts: [],
+  selectedPost: null,
   loading: false,
   refreshing: false,
   loadingMore: false,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/types/authTypes.ts
 import { z } from "zod";
 import type { registerSchema } from "../validation/authValidation";
@@ -41,6 +42,7 @@ export type AuthResponse = {
   status: string;
   message: string;
   data: {
+    data: any;
     user: User;
     tokens: AuthTokens;
   };

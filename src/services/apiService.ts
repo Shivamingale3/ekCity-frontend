@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/services/apiService.ts
 import axios, {
   type AxiosInstance,
@@ -38,7 +39,7 @@ class ApiService {
         }
         return config;
       },
-      (error) => Promise.reject(error)
+      (error) => Promise.reject(error),
     );
 
     this.api.interceptors.response.use(
@@ -88,7 +89,7 @@ class ApiService {
         const message =
           error.response?.data?.message || error.message || "An error occurred";
         throw new Error(message);
-      }
+      },
     );
   }
 
@@ -99,7 +100,7 @@ class ApiService {
         throw new Error("No refresh token found");
       }
       await this.api.post("/auth/refresh-token", { refreshToken });
-    } catch (error) {
+    } catch {
       throw new Error("Token refresh failed");
     }
   }
@@ -120,7 +121,7 @@ class ApiService {
   // Generic request methods
   async get<T>(
     url: string,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<AxiosResponse<T>> {
     return this.api.get<T>(url, config);
   }
@@ -128,7 +129,7 @@ class ApiService {
   async post<T>(
     url: string,
     data?: any,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<AxiosResponse<T>> {
     return this.api.post<T>(url, data, config);
   }
@@ -136,7 +137,7 @@ class ApiService {
   async put<T>(
     url: string,
     data?: any,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<AxiosResponse<T>> {
     return this.api.put<T>(url, data, config);
   }
@@ -144,14 +145,14 @@ class ApiService {
   async patch<T>(
     url: string,
     data?: any,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<AxiosResponse<T>> {
     return this.api.patch<T>(url, data, config);
   }
 
   async delete<T>(
     url: string,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<AxiosResponse<T>> {
     return this.api.delete<T>(url, config);
   }

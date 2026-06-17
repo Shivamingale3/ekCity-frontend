@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/stores/authStore.ts
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
@@ -162,6 +163,6 @@ export const useAuthStore = create<AuthStore>()(
     }),
     {
       name: "auth-store",
-    }
-  )
+    },
+  ),
 );

@@ -188,7 +188,7 @@ function Feed() {
   }
 
   return (
-    <div className="w-full h-full flex flex-col justify-start items-center relative pull-refresh-container">
+    <div className="w-full h-full flex flex-col justify-start items-center relative pull-refresh-container overflow-hidden">
 
       {/* Error handling */}
       {error && (
@@ -224,7 +224,7 @@ function Feed() {
       {/* Scrollable content */}
       <div
         ref={scrollContainerRef}
-        className="w-full h-full overflow-y-auto custom-scrollbar transition-transform duration-300 ease-out"
+        className="w-full flex-1 min-h-0 overflow-y-auto custom-scrollbar transition-transform duration-300 ease-out"
         onScroll={handleScroll}
         style={{
           transform: isPulling ? `translateY(${pullChange * 0.3}px)` : 'translateY(0px)'

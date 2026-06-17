@@ -169,3 +169,15 @@ export const getBodiesToCollab = createAsyncThunk<GetBodiesResponse, null>(
     }
   }
 );
+
+export const getPostById = createAsyncThunk<any, string>(
+  "posts/getPostById",
+  async (postId, { rejectWithValue }) => {
+    try {
+      const response = await apiService.get(`/feed/${postId}`);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);

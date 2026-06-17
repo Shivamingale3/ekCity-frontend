@@ -7,9 +7,11 @@ import type { Post } from "@/types/postTypes"
 import { MessageCircle, Send, ThumbsUp } from "lucide-react"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
+import { SharePostDialog } from "./SharePostDialog"
 
 export const PostFooter = ({ post, onClickComment }: { post: Post, onClickComment: () => void }) => {
   const [like, setLike] = useState(false)
+  const [shareOpen, setShareOpen] = useState(false)
   const dispatch = useAppDispatch();
 
 
@@ -64,8 +66,8 @@ export const PostFooter = ({ post, onClickComment }: { post: Post, onClickCommen
     },
     {
       icon: Send,
-      label: "Share",
-      onClick: () => null,
+          label: "Share",
+          onClick: () => setShareOpen(true),
       hoverColor: "hover:bg-gray-100 dark:hover:bg-gray-800",
     },
   ]
@@ -74,7 +76,7 @@ export const PostFooter = ({ post, onClickComment }: { post: Post, onClickCommen
     <div className="space-y-3 sm:space-y-3 md:space-y-4">
       <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
 
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-3">
+      <div className="flex flex-row items-center justify-between gap-3">
         <div className="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 md:gap-2 flex-wrap">
           {reactionButtons.map(({ icon: Icon, label, active, onClick, activeColor, hoverColor }) => (
             <Button
@@ -108,6 +110,12 @@ export const PostFooter = ({ post, onClickComment }: { post: Post, onClickCommen
           ))}
         </div>
       </div>
+
+      <SharePostDialog
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+        postId={post.id}
+      />
     </div>
   )
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/services/authService.ts
 import {
   GoogleAuthProvider,
@@ -31,7 +32,7 @@ export class AuthService {
     try {
       const response = await apiService.post<AuthResponse>(
         "/auth/login",
-        credentials
+        credentials,
       );
       // Reset flags on successful login
       apiService.resetFlags();
@@ -63,7 +64,7 @@ export class AuthService {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       // Reset flags on successful registration
@@ -104,7 +105,7 @@ export class AuthService {
 
       const response = await apiService.post<AuthResponse>(
         "/auth/sso-login",
-        payload
+        payload,
       );
       this.setTokens(response.data.data.tokens);
       return response.data;

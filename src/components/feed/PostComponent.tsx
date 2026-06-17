@@ -32,7 +32,7 @@ export const PostComponent: React.FC<PostComponentProps> = ({
   }
 
   return (
-    <Card className="w-[90%] lg:w-[50%] max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto bg-white dark:bg-black border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 rounded-lg sm:rounded-xl overflow-hidden">
+    <Card className="w-[90%] lg:w-[50%] max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto bg-white dark:bg-black border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 rounded-lg sm:rounded-xl">
       <CardHeader className="p-3 sm:p-4 md:p-4 lg:p-5">
         <PostHeader postData={postData} />
       </CardHeader>

@@ -10,6 +10,7 @@ import AuthLayout from "@/layouts/AuthLayout";
 import ProfileLayout from "@/layouts/ProfileLayout";
 import RootLayout from "@/layouts/RootLayout";
 import Feed from "@/pages/Feed";
+import PostPage from "@/pages/PostPage";
 
 import { AuthGuard } from "@/components/AuthGuard";
 import ReportsAdminParent from "@/components/report/admin/ReportsAdminParent";
@@ -142,8 +143,10 @@ const reportAdminRoute = createProtectedRoute(
   ReportsAdminParent
 );
 const profileRoute = createProtectedRoute("/profile", ProfileLayout, {
-  errorComponent: ForbiddenPage, // Custom error page for profile
+  errorComponent: ForbiddenPage,
 });
+
+const postRoute = createProtectedRoute("/post/$postId", PostPage);
 
 // Route tree
 const routeTree = rootRoute.addChildren([
@@ -151,6 +154,7 @@ const routeTree = rootRoute.addChildren([
   authRoute,
   feedRoute,
   profileRoute,
+  postRoute,
   // Error routes
   notFoundRoute,
   unauthorizedRoute,

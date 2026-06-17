@@ -1,8 +1,10 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { feedInitialState } from "../states/feedStates";
 import {
+  createPost,
   fetchPosts,
   getBodiesToCollab,
+  getPostById,
   getPostComments,
   loadMorePosts,
   refreshPosts,
@@ -141,6 +143,36 @@ const postsSlice = createSlice({
         state.errorUsersToCollab =
           action.error.message || "Failed to fetch bodies to collab";
         state.usersToCollab = [];
+      })
+
+      // Create Post
+      .addCase(createPost.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(createPost.fulfilled, (state, action: PayloadAction<any>) => {
+        const newPost = action.payload?.data?.post;
+        if (newPost) {
+          state.posts = [newPost, ...state.posts];
+        }
+        state.error = null;
+      })
+      .addCase(createPost.rejected, (state, action) => {
+        state.error = action.error.message || "Failed to create post";
+      })
+
+      // Get post by ID
+      .addCase(getPostById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getPostById.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.selectedPost = action.payload?.data || action.payload;
+        state.error = null;
+      })
+      .addCase(getPostById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch post";
       });
   },
 });

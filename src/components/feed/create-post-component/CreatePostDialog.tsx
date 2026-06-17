@@ -34,6 +34,7 @@ import {
   X,
 } from "lucide-react";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { CollaboratorDialog } from "./AddCollaboratorDialog";
 import { PostPreview } from "./PostPreviewModal";
 import { useAuthStore } from "@/stores/authStore";
@@ -178,9 +179,18 @@ const CreatePostDialog = () => {
       selectedVideos.forEach((video) => {
         formData.append("videos", video); // Changed from `videos` to videos
       });
-      await dispatch(createPost(formData));
+      const resultAction = await dispatch(createPost(formData));
+      if (createPost.rejected.match(resultAction)) {
+        throw new Error((resultAction.payload as string) || "Failed to create post");
+      }
 
-      // Reset form
+      // Warn about failed uploads
+      const failedUploads = (resultAction.payload as any)?.data?.failedUploads;
+      if (failedUploads && failedUploads.length > 0) {
+        toast.warning(`Post created but ${failedUploads.length} media upload(s) failed: ${failedUploads.join(', ')}`);
+      }
+
+      // Reset form on success
       setPostContent("");
       setPostCategory("");
       setPostTags([]);

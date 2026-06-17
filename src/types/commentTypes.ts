@@ -27,25 +27,23 @@ export type PostComment = {
     lastName: string;
     profilePicture: string;
   };
-  replies: Array<
-    {
+  replies: Array<{
+    id: string;
+    userId: string;
+    postId: string;
+    parentCommentId: string | null;
+    content: string;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+    user: {
       id: string;
-      userId: string;
-      postId: string;
-      parentCommentId: string | null;
-      content: string;
-      isActive: boolean;
-      createdAt: string;
-      updatedAt: string;
-      user: {
-        id: string;
-        fullName: string;
-        firstName: string;
-        lastName: string;
-        profilePicture: string;
-      };
-    >
-  ;
+      fullName: string;
+      firstName: string;
+      lastName: string;
+      profilePicture: string;
+    };
+  }>;
   reactions: PostReaction;
 };
 
