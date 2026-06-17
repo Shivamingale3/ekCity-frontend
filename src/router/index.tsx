@@ -35,8 +35,15 @@ const authRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/auth",
   beforeLoad: async () => {
-    const { status } = useAuthStore.getState();
-    if (status === AuthStatus.AUTHENTICATED) {
+    const { status, verifyUser } = useAuthStore.getState();
+    if (status === AuthStatus.IDLE || status === AuthStatus.UNAUTHENTICATED) {
+      try {
+        await verifyUser();
+      } catch {
+        return;
+      }
+    }
+    if (useAuthStore.getState().status === AuthStatus.AUTHENTICATED) {
       throw redirect({ to: "/feed" });
     }
   },
@@ -58,13 +65,13 @@ const indexRoute = createRoute({
       try {
         await verifyUser();
       } catch (error) {
-        throw redirect({ to: "/auth", replace: true });
+        throw redirect({ to: "/auth/login", replace: true });
       }
     }
 
     const currentStatus = useAuthStore.getState().status;
     const destination =
-      currentStatus === AuthStatus.AUTHENTICATED ? "/feed" : "/auth";
+      currentStatus === AuthStatus.AUTHENTICATED ? "/feed" : "/auth/login";
     throw redirect({ to: destination });
   },
 });
@@ -88,13 +95,13 @@ export const createProtectedRoute = (
         try {
           await verifyUser();
         } catch {
-          throw redirect({ to: "/auth" });
+          throw redirect({ to: "/auth/login" });
         }
       }
 
       const currentStatus = useAuthStore.getState().status;
       if (currentStatus !== AuthStatus.AUTHENTICATED) {
-        throw redirect({ to: "/auth" });
+        throw redirect({ to: "/feed" });
       }
 
       // Additional role-based checks if needed
@@ -173,4 +180,4 @@ export const router = createRouter({
 });
 
 // Export error pages for manual navigation
-export { ForbiddenPage, NotFoundPage, ServerErrorPage, UnauthorizedPage };
+export default { ForbiddenPage, NotFoundPage, ServerErrorPage, UnauthorizedPage };

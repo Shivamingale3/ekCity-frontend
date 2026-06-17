@@ -45,7 +45,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           const response = await authService.login(credentials);
           set({
-            user: response.data.data.user,
+            user: response.data.user,
             status: AuthStatus.AUTHENTICATED,
             isLoading: false,
             error: null,
@@ -68,7 +68,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           const response = await authService.register(credentials);
           set({
-            user: response.data.data.user,
+            user: response.data.user,
             status: AuthStatus.AUTHENTICATED,
             isLoading: false,
             error: null,
@@ -91,7 +91,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           const response = await authService.ssoLogin();
           set({
-            user: response.data.data.user,
+            user: response.data.user,
             status: AuthStatus.AUTHENTICATED,
             isLoading: false,
             error: null,
@@ -114,16 +114,16 @@ export const useAuthStore = create<AuthStore>()(
         try {
           await authService.logout();
         } catch (error) {
-          // Continue with logout even if server call fails
           console.error("Logout error:", error);
         } finally {
-          // Always clear local state
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+
           set({
             ...initialState,
             status: AuthStatus.UNAUTHENTICATED,
           });
 
-          // Navigate to auth page using router
           router.navigate({ to: "/auth" });
         }
       },
