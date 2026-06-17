@@ -7,19 +7,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/authStore";
-import type { Post } from "@/types/postTypes";
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Edit, LogOut } from "lucide-react";
 import React, { useEffect, useState } from 'react';
 import { ThemeToggleDropdown } from "../root/ThemeToggle";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { updateUserProfile } from "@/redux/thunks/userThunk";
+import { updateUserProfile, getUserFeed, getUserMedia } from "@/redux/thunks/userThunk";
 
 function ProfileHeader() {
     const { user, logout, setUser } = useAuthStore();
-    const [_userPosts, setUserPosts] = useState<Post[]>([])
-    const [_userMedia, setUserMedia] = useState<any[]>([])
-    const [_loading, setLoading] = useState(true)
     const [editDialogOpen, setEditDialogOpen] = useState(false)
     const [editData, setEditData] = useState({
         firstName: user?.firstName || "",
@@ -36,36 +32,10 @@ function ProfileHeader() {
 
     useEffect(() => {
         if (user) {
-            fetchUserPosts()
-            fetchUserMedia()
+            dispatch(getUserFeed({ userId: user.id, page: 1, limit: 10 }));
+            dispatch(getUserMedia());
         }
-    }, [user])
-
-    const fetchUserPosts = async () => {
-        try {
-            const response = await fetch(`/api/users/${user?.id}/posts`)
-            if (response.ok) {
-                const data = await response.json()
-                setUserPosts(data.posts)
-            }
-        } catch (error) {
-            console.error("Failed to fetch user posts:", error)
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    const fetchUserMedia = async () => {
-        try {
-            const response = await fetch(`/api/users/${user?.id}/media`)
-            if (response.ok) {
-                const data = await response.json()
-                setUserMedia(data.media)
-            }
-        } catch (error) {
-            console.error("Failed to fetch user media:", error)
-        }
-    }
+    }, [user, dispatch])
 
     const handleUpdateProfile = async (e: React.FormEvent) => {
         e.preventDefault();

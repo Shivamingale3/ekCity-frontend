@@ -1,4 +1,5 @@
 export type GetReportsByFilter = {
+  status: string;
   message: string;
   data: Report[];
 };

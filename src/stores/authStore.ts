@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           const response = await authService.login(credentials);
           set({
-            user: response.data.user,
+            user: response.data.data.user,
             status: AuthStatus.AUTHENTICATED,
             isLoading: false,
             error: null,
@@ -67,7 +67,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           const response = await authService.register(credentials);
           set({
-            user: response.data.user,
+            user: response.data.data.user,
             status: AuthStatus.AUTHENTICATED,
             isLoading: false,
             error: null,
@@ -90,7 +90,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           const response = await authService.ssoLogin();
           set({
-            user: response.data.user,
+            user: response.data.data.user,
             status: AuthStatus.AUTHENTICATED,
             isLoading: false,
             error: null,

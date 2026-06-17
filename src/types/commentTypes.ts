@@ -27,7 +27,7 @@ export type PostComment = {
     lastName: string;
     profilePicture: string;
   };
-  replies: [
+  replies: Array<
     {
       id: string;
       userId: string;
@@ -44,8 +44,8 @@ export type PostComment = {
         lastName: string;
         profilePicture: string;
       };
-    }
-  ];
+    >
+  ;
   reactions: PostReaction;
 };
 

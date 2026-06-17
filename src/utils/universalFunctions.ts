@@ -25,6 +25,7 @@ export const getTimeAgo = (dateString: string) => {
   return `${Math.floor(diffInSeconds / 86400)}d`;
 };
 export const getInitials = (name: string) => {
+  if (!name) return "??";
   return name
     .split(" ")
     .map((n) => n[0])

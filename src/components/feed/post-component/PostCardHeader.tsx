@@ -26,8 +26,8 @@ export const PostHeader: React.FC<{ postData: Post }> = ({ postData }) => {
     }
   }
 
-  const roleStyle = postData.user.role ? POST_STYLES.role[postData.user.role] : POST_STYLES.role[UserRole.CITIZEN]
-  const categoryStyle = POST_STYLES.category[postData.postCategory]
+  const roleStyle = postData.user?.role ? POST_STYLES.role[postData.user.role] : POST_STYLES.role[UserRole.CITIZEN]
+  const categoryStyle = POST_STYLES.category[postData.postCategory] || POST_STYLES.category["OTHER"]
   const isOwnPost = !!(user && user.id === postData.user?.id)
 
 
@@ -63,7 +63,7 @@ export const PostHeader: React.FC<{ postData: Post }> = ({ postData }) => {
             <div className="flex flex-wrap gap-1 sm:gap-2">
               {postData.collaborators.map((collaborator, index) => (
                 <span key={collaborator?.id} className="font-medium text-gray-700 dark:text-gray-300 break-words">
-                  {collaborator?.user.fullName}
+                      {collaborator?.user?.fullName}
                   {index < postData.collaborators.length - 1 ? "," : ""}
                 </span>
               ))}

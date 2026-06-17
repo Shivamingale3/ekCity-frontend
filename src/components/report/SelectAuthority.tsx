@@ -28,7 +28,8 @@ function SelectAuthority({
     if (govtBodies.length > 0) {
       setReportTo(
         govtBodies.find((user) => user?.fullName.includes("Police"))?.id ??
-          "Select Authority"
+          govtBodies[0]?.id ??
+          ""
       );
     }
   }, [govtBodies]);

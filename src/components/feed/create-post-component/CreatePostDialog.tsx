@@ -280,15 +280,13 @@ const CreatePostDialog = () => {
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={PostCategory.ALERT}>Alert</SelectItem>
-                    <SelectItem value={PostCategory.NEWS}>News</SelectItem>
-                    <SelectItem value={PostCategory.ANNOUNCEMENT}>
-                      Announcement
-                    </SelectItem>
-                    <SelectItem value={PostCategory.DISCUSSION}>
-                      Discussion
-                    </SelectItem>
-                    <SelectItem value={PostCategory.UPDATE}>Update</SelectItem>
+                    <SelectItem value={PostCategory.ALERT}>⚠️ Alert</SelectItem>
+                    <SelectItem value={PostCategory.INFORMATION}>ℹ️ Information</SelectItem>
+                    <SelectItem value={PostCategory.ANNOUNCEMENT}>📢 Announcement</SelectItem>
+                    <SelectItem value={PostCategory.EVENT}>🎉 Event</SelectItem>
+                    <SelectItem value={PostCategory.JOB}>💼 Job</SelectItem>
+                    <SelectItem value={PostCategory.LOST_FOUND}>🔍 Lost & Found</SelectItem>
+                    <SelectItem value={PostCategory.OTHER}>📌 Other</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.category && (

@@ -24,7 +24,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAuthStore } from "@/stores/authStore";
 import { Spinner } from "../ui/spinner";
 
 const formSchema = z.object({
@@ -44,7 +43,6 @@ export function ForgotPasswordDialog({
 }: ForgotPasswordDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const { login } = useAuthStore();
 
   const form = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(formSchema),
@@ -53,12 +51,12 @@ export function ForgotPasswordDialog({
     },
   });
 
-  const onSubmit = async (values: ForgotPasswordFormValues) => {
+  const onSubmit = async (_values: ForgotPasswordFormValues) => {
     setIsSubmitting(true);
     try {
-      await login({ email: values.email, password: "" });
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setIsSuccess(true);
-    } catch (error) {
+    } catch (_error) {
       form.setError("email", {
         type: "manual",
         message:

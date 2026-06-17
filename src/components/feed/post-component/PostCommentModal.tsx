@@ -96,16 +96,16 @@ export const CommentModal = ({
         <div key={comment?.id} className={`${isReply ? "ml-12" : ""} space-y-3`}>
             <div className="flex gap-3">
                 <Avatar className="h-8 w-8">
-                    <AvatarImage src={comment.user.profilePicture ?? ""} alt={comment.user.fullName} />
+                    <AvatarImage src={comment.user?.profilePicture ?? ""} alt={comment.user?.fullName ?? ""} />
                     <AvatarFallback className="text-xs bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-                        {getInitials(comment.user.fullName)}
+                        {getInitials(comment.user?.fullName ?? "")}
                     </AvatarFallback>
                 </Avatar>
 
                 <div className="flex-1 space-y-2">
                     <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl px-4 py-3">
                         <div className="flex items-center gap-2 mb-1">
-                            <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">{comment.user.fullName}</span>
+                            <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">{comment.user?.fullName}</span>
                             <span className="text-xs text-gray-500 dark:text-gray-400">{getTimeAgo(comment.createdAt)}</span>
                         </div>
                         <p className="text-sm text-gray-800 dark:text-gray-200">{comment.content}</p>

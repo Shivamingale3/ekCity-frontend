@@ -5,7 +5,7 @@ export const usePostContent = (content: string, wordLimit: number = 100) => {
   const [expanded, setExpanded] = useState(false);
   const [displayContent, setDisplayContent] = useState("");
 
-  const shouldTruncate = content.split(" ").length > wordLimit;
+  const shouldTruncate = (content || "").split(" ").length > wordLimit;
 
   useEffect(() => {
     if (shouldTruncate) {

@@ -1,11 +1,13 @@
 import { UserRole } from "./authTypes";
 
 export enum PostCategory {
-  ALERT = "ALERT",
-  NEWS = "NEWS",
+  INFORMATION = "INFORMATION",
   ANNOUNCEMENT = "ANNOUNCEMENT",
-  DISCUSSION = "DISCUSSION",
-  UPDATE = "UPDATE",
+  ALERT = "ALERT",
+  EVENT = "EVENT",
+  JOB = "JOB",
+  LOST_FOUND = "LOST_FOUND",
+  OTHER = "OTHER",
 }
 
 export enum MediaType {
@@ -60,7 +62,7 @@ export type Post = {
   postContent: string;
   postCategory: PostCategory;
   postTags: string[];
-  isActive: true;
+  isActive: boolean;
   createdAt: string;
   updatedAt: string;
   cityId: string | null;

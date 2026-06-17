@@ -105,7 +105,7 @@ const ReportTile = ({
         <div className="w-full flex items-center gap-5">
           <div className="w-full flex flex-col justify-center items-start gap-5">
             <CardDescription className="w-full h-max text-lg font-normal text-black dark:text-white bg-[#353535] rounded-md p-2">
-              {report.report.length > 255 && !expanded ? (
+              {report.report.length > 500 && !expanded ? (
                 <>{report.report.slice(0, 500)}</>
               ) : (
                 report.report
